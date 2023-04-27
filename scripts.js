@@ -10,11 +10,13 @@ let finalValue = 0;
 let heldValue = 0;
 let operatorChoice = '';
 let tempValue = 0;
+let afterEquals = false;
 
 // Set up digits
 const digits = document.querySelectorAll('.digit');
 digits.forEach(btn => {
     btn.addEventListener ('click', event => {
+        afterEqualsFunction();
         let input = btn.textContent;
         tempInput += input;
         fullInput += input;
@@ -23,11 +25,20 @@ digits.forEach(btn => {
     });
 });
 
+const afterEqualsFunction = (() => {
+    if (afterEquals === true ){
+        heldValue = 0;
+        finalValue = 0;
+        fullInput = '';
+        afterEquals = false;
+    };
+});
+
 // Set up operator buttons
 const operators = document.querySelectorAll('.operator');
 operators.forEach(btn => {
     btn.addEventListener('click', event => {
-
+        afterEquals = false;   
         btn.classList.remove('operator');
         // Special case for equals
         if (btn.className === 'equals'){
@@ -38,8 +49,9 @@ operators.forEach(btn => {
             screen.textContent = finalValue;
             heldValue = finalValue;
             fullInput = heldValue;
+            afterEquals = true;
         }
-        else if (tempInput!= ''){          
+        else if (tempInput!= ''){    
             if (heldValue != 0){               
                 tempValue = equals( heldValue, operatorChoice, tempInput);
                 heldValue = tempValue;             
@@ -48,6 +60,7 @@ operators.forEach(btn => {
                 heldValue = tempInput;         
             }
             fullInput += btn.textContent;
+            
         }
         // Adjust global variables
         operatorChoice = btn.className;
@@ -55,14 +68,6 @@ operators.forEach(btn => {
         fullInputScreen.textContent = fullInput;
     });
 });
-
-/*
-    1st operator press : temp input -> held value
-    2nd+ operator press : new temp input ( current operator) held value
-                             new value -> held value
-    1st equals: current held value -> final value
-    further operations : held value (operator) new input 
-*/
 
 // Operation function
 const add = ((a, b) => +a + +b);
