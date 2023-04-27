@@ -2,8 +2,7 @@
 
 // Set up caluclator screen
 const screen = document.querySelector('.result-Screen');
-const fullInputScreen = document.querySelector('.full-Input')
-
+const fullInputScreen = document.querySelector('.full-Input-Text')
 // Set up global variables
 let tempInput = '';
 let fullInput = '';
@@ -19,7 +18,8 @@ digits.forEach(btn => {
         let input = btn.textContent;
         tempInput += input;
         fullInput += input;
-        screen.textContent = tempInput; 
+        screen.textContent = tempInput;
+        fullInputScreen.textContent = fullInput;
     });
 });
 
@@ -27,36 +27,32 @@ digits.forEach(btn => {
 const operators = document.querySelectorAll('.operator');
 operators.forEach(btn => {
     btn.addEventListener('click', event => {
-        console.log(`Start Temp: ${tempValue}`);
-        console.log(`Start Held: ${heldValue}`);
+
         btn.classList.remove('operator');
         // Special case for equals
         if (btn.className === 'equals'){
+            if (tempInput === '') {
+                tempInput = 0;
+            }
             finalValue = equals(heldValue,operatorChoice,tempInput);
             screen.textContent = finalValue;
             heldValue = finalValue;
+            fullInput = heldValue;
         }
-        else {
-            if (heldValue != 0){
-                
-                console.log(`In Temp: ${tempValue}`);
-                console.log(`In Held: ${heldValue}`);
+        else if (tempInput!= ''){          
+            if (heldValue != 0){               
                 tempValue = equals( heldValue, operatorChoice, tempInput);
-                heldValue = tempValue;
-                console.log(`Out Temp: ${tempValue}`);
-                console.log(`Out Held: ${heldValue}`);
+                heldValue = tempValue;             
             }
             else {
-                heldValue = tempInput;
+                heldValue = tempInput;         
             }
-            operatorChoice = btn.className;
+            fullInput += btn.textContent;
         }
         // Adjust global variables
-        fullInput += btn.textContent;
+        operatorChoice = btn.className;
         tempInput = '';
-        console.log(`End Temp: ${tempValue}`);
-        console.log(`End Held: ${heldValue}`);
-        
+        fullInputScreen.textContent = fullInput;
     });
 });
 
