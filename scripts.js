@@ -1,12 +1,3 @@
-/*
-
-
-
-Figure out why there is no symbol added to the fullInput directly after equals
-
-
-
-*/
 
 // Set up caluclator screen
 const screen = document.querySelector('.result-Screen');
@@ -50,16 +41,20 @@ operators.forEach(btn => {
         btn.classList.remove('operator');
         // Special case for equals
         if (btn.className === 'equals'){
-            if (tempInput === '') {
-                tempInput = 0;
+            if (afterEquals === false){
+                switch(true){
+                    case (tempInput === '' && heldValue != 0): finalValue = heldValue; break;
+                    case (tempInput != '' && heldValue === 0): finalValue = tempInput; break;
+                    default: finalValue = equals(heldValue,operatorChoice,tempInput); break;
+                }
+                screen.textContent = finalValue;
+                heldValue = finalValue;
+                fullInput = heldValue;
+                afterEquals = true;
             }
-            finalValue = equals(heldValue,operatorChoice,tempInput);
-            screen.textContent = finalValue;
-            heldValue = finalValue;
-            fullInput = heldValue;
-            afterEquals = true;
         }
         else if (tempInput!= ''){   
+            console.log(`Full before: ${fullInput}`)
             fullInput += btn.textContent; 
             if (heldValue != 0){               
                 tempValue = equals( heldValue, operatorChoice, tempInput);
@@ -68,6 +63,7 @@ operators.forEach(btn => {
             else {
                 heldValue = tempInput;         
             }         
+            console.log(`Full after: ${fullInput}`)
         }
         
         // Adjust global variables
@@ -90,6 +86,7 @@ const equals = ((a, op, b) => {
         case 'add': sol = add(a,b); break;
         case 'divide': sol = divide(a, b); break;
         case 'subtract': sol = subtract(a, b); break;
+        default: break;
     }
     return sol;
 });
