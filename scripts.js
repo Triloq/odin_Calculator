@@ -1,4 +1,12 @@
+/*
 
+
+
+Figure out why there is no symbol added to the fullInput directly after equals
+
+
+
+*/
 
 // Set up caluclator screen
 const screen = document.querySelector('.result-Screen');
@@ -51,17 +59,17 @@ operators.forEach(btn => {
             fullInput = heldValue;
             afterEquals = true;
         }
-        else if (tempInput!= ''){    
+        else if (tempInput!= ''){   
+            fullInput += btn.textContent; 
             if (heldValue != 0){               
                 tempValue = equals( heldValue, operatorChoice, tempInput);
                 heldValue = tempValue;             
             }
             else {
                 heldValue = tempInput;         
-            }
-            fullInput += btn.textContent;
-            
+            }         
         }
+        
         // Adjust global variables
         operatorChoice = btn.className;
         tempInput = '';
