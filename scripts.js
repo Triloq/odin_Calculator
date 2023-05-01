@@ -1,6 +1,6 @@
 
 // Set up caluclator screen
-const screen = document.querySelector('.result-Screen');
+const screen = document.querySelector('.result-Text');
 const fullInputScreen = document.querySelector('.full-Input-Text')
 // Set up global variables
 let tempInput = '';
@@ -10,7 +10,8 @@ let heldValue = 0;
 let operatorChoice = '';
 let tempValue = 0;
 let afterEquals = false;
-
+let afterOperand = false;
+let operand;
 // this is the max number of significant digits to be shown after solution
 let screenLength = 10;
 
@@ -19,11 +20,12 @@ const digits = document.querySelectorAll('.digit');
 digits.forEach(btn => {
     btn.addEventListener ('click', event => {
         afterEqualsFunction();
+        afterOperand = false;
         let input = btn.textContent;
         tempInput += input;
         fullInput += input;
         screen.textContent = tempInput;
-        fullInputScreen.textContent = fullInput;
+        // fullInputScreen.textContent = fullInput;
     });
 });
 
@@ -42,6 +44,8 @@ operators.forEach(btn => {
     btn.addEventListener('click', event => {
         afterEquals = false;   
         btn.classList.remove('operator');
+        // check for double input on operators
+        
         // Special case for equals
         if (btn.className === 'equals'){
             // switch to tell if equals has been hit without new input or hit twice (on accident)
@@ -50,34 +54,74 @@ operators.forEach(btn => {
                 case (tempInput != '' && heldValue === 0): finalValue = tempInput; break;
                 default: finalValue = equals(heldValue,operatorChoice,tempInput); break;
             }
-            // finalValue = manyDigits(finalValue);
             screen.textContent = finalValue;
             heldValue = finalValue;
-            fullInput = heldValue;
+            // fullInput = heldValue;
             afterEquals = true;
-            
-        }
-        else if (tempInput!= ''){
-            // Will happen as long as there has been new digits pressed since last operator
-            fullInput += btn.textContent; 
-            if (heldValue != 0){               
-                tempValue = equals( heldValue, operatorChoice, tempInput);
-                heldValue = tempValue;             
-            }
-            else {
-                heldValue = tempInput;         
-            }         
+
+            let tempFullInput = fullInput + '=';
+            fullInputScreen.textContent = tempFullInput;
         }
         else {
-            // specific case of hitting another operator after an equals to continue equation
-            fullInput += btn.textContent;
-        }   
+            switch (btn.textContent) {
+                case '+': operand = '+'; break;
+                case '-': operand = '-'; break;
+                case 'x': operand = 'x'; break;
+                case "\u00F7": operand = "\u00F7"; break;
+                default: break;
+            }
+            if (tempInput!= ''){
+                // Will happen as long as there has been new digits pressed since last operator
+                fullInput += operand;
+                if (heldValue != 0){               
+                    tempValue = equals( heldValue, operatorChoice, tempInput);
+                    heldValue = tempValue;             
+                }
+                else {
+                    heldValue = tempInput + '';         
+                }         
+            }
+            else {
+                // specific case of hitting another operator after an equals to continue equation
+                fullInput += operand;
+            }   
+            fullInputScreen.textContent = fullInput;
+            afterOperand = true;
+        }
         // Adjust global variables
         operatorChoice = btn.className;
         tempInput = '';
-        fullInputScreen.textContent = fullInput;
+        // fullInputScreen.textContent = fullInput;
+        
     });
 });
+
+// clear and delete
+const clearButton = document.querySelector(".clear");
+const deleteButton = document.querySelector(".delete");
+
+clearButton.addEventListener('click', event => {
+    clearAll();
+})
+
+deleteButton.addEventListener('click', event => {
+    deleteInput();
+})
+
+// decimal point and (+/-)
+const decimalPoint = document.querySelector(".dot");
+// const plusMinus = document.querySelector(".negative");
+
+decimalPoint.addEventListener('click', event => {
+    tempInput += '.';
+    fullInput += '.';
+})
+
+// const reverseSign = ((num) => num * -1);
+// plusMinus.addEventListener('click', event => {
+//     tempInput = reverseSign(tempInput);
+    
+// })
 
 // Operation function
 const add = ((a, b) => +a + +b);
@@ -113,19 +157,6 @@ const countSignificantIntegers = ((num, count = 0) => {
     }
 });
 
-
-// found at https://stackoverflow.com/questions/22884720/what-is-the-fastest-way-to-count-the-number-of-significant-digits-of-a-number
-// critical flaw that 0's before a decimal aren't considered significant for some reason
-// didn't use but keeping here for potential future
-var log10 = Math.log(10);
-function getSignificantDigitCount(n) {
-    n = Math.abs(String(n).replace(".", "")); //remove decimal and make positive
-    if (n == 0) return 0;
-    while (n != 0 && n % 10 == 0) n /= 10; //kill the 0s at the end of n
-
-    return Math.floor(Math.log(n) / log10) + 1; //get number of digits
-}
-
 const clearAll = (() => {
     tempInput = '';
     fullInput = '';
@@ -134,4 +165,12 @@ const clearAll = (() => {
     operatorChoice = '';
     tempValue = 0;
     afterEquals = false;
+    fullInputScreen.textContent = fullInput;
+    screen.textContent = 0;
+})
+
+const deleteInput = (() => {
+    fullInput = heldValue;
+    tempInput = 0;
+    screen.textContent = 0;
 })

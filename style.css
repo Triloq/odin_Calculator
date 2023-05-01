@@ -1,7 +1,79 @@
 
+body {
+    display: flex;
+    height: 700px;
+    width: 700px;
+    padding: 50px;
+}
 
+.calculator {
+    display: flex;
+    flex-direction: column;
+    width: 500px;
+    height: 600px;
+    align-items: center;
+    vertical-align: center;
+}
+
+
+/* Text Area */
+.screen {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    width: 400px;
+    height: 100px;
+    justify-content:center;
+    padding: 10px;
+}
+
+p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow:ellipsis;
+    
+}
+
+button {
+    width: 75px;
+    height: 60px;
+    text-align: center;
+}
+
+.result-Text {
+    margin: 0 10px;
+    font-size: 72px;
+    direction: rtl;
+}
 
 .full-Input-Text {
-    width: 200px;
-    height: 20px;
+    text-overflow: clip;
+    margin: 0 10px;
+    font-size: 36px;
+    height: 36px;
+}
+
+.calc-ButtonBox {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid black;
+    width: 400px;
+    height: 500px;
+    padding: 10px;
+
+}
+
+.erasure {
+    align-self: end;
+}
+
+.numOp-Box {
+    display: flex;
+    width: 100%;
+}
+
+.digit-box {
+    display: flex;
+    flex-direction: column wrap;
+    space
 }
