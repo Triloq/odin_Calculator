@@ -1,39 +1,44 @@
 
 // Set up caluclator screen
 const screen = document.querySelector('.result-Text');
-const fullInputScreen = document.querySelector('.full-Input-Text')
+const fullEqDisplayScreen = document.querySelector('.full-Input-Text')
 // Set up global variables
-let tempInput = '';
-let fullInput = '';
-let finalValue = 0;
-let heldValue = 0;
+let currentInput = '';
+let fullEqDisplay = '';
+let resultValue = 0;
+let intermediaryResult = 0;
 let operatorChoice = '';
 let tempValue = 0;
 let afterEquals = false;
 let afterOperand = false;
 let operand;
 // this is the max number of significant digits to be shown after solution
-let screenLength = 10;
+let maxInputLength = 10;
+let currentInputLength = 0;
+let decimal = false;
 
 // Set up digits
 const digits = document.querySelectorAll('.digit');
 digits.forEach(btn => {
     btn.addEventListener ('click', event => {
-        afterEqualsFunction();
-        afterOperand = false;
-        let input = btn.textContent;
-        tempInput += input;
-        fullInput += input;
-        screen.textContent = tempInput;
-        // fullInputScreen.textContent = fullInput;
+        if (currentInputLength < 10){
+            afterEqualsFunction();
+            afterOperand = false;
+            let input = btn.textContent;
+            currentInput += input;
+            fullEqDisplay += input;
+            screen.textContent = currentInput;
+            // fullEqDisplayScreen.textContent = fullEqDisplay;
+            currentInputLength++;
+        }
     });
 });
 
 const afterEqualsFunction = (() => {
     if (afterEquals === true ){
-        heldValue = 0;
-        finalValue = 0;
-        fullInput = '';
+        intermediaryResult = 0;
+        resultValue = 0;
+        fullEqDisplay = '';
         afterEquals = false;
     };
 });
@@ -44,23 +49,26 @@ operators.forEach(btn => {
     btn.addEventListener('click', event => {
         afterEquals = false;   
         btn.classList.remove('operator');
+        currentInputLength = 0;
+        decimal = false;
         // check for double input on operators
         
         // Special case for equals
         if (btn.className === 'equals'){
             // switch to tell if equals has been hit without new input or hit twice (on accident)
             switch(true){
-                case (tempInput === '' && heldValue != 0): finalValue = heldValue; break;
-                case (tempInput != '' && heldValue === 0): finalValue = tempInput; break;
-                default: finalValue = equals(heldValue,operatorChoice,tempInput); break;
+                case (currentInput === '' && intermediaryResult != 0): resultValue = intermediaryResult; break;
+                case (currentInput != '' && intermediaryResult === 0): resultValue = currentInput; break;
+                default: resultValue = equals(intermediaryResult,operatorChoice,currentInput); break;
             }
-            screen.textContent = finalValue;
-            heldValue = finalValue;
-            // fullInput = heldValue;
+            screen.textContent = resultValue;
+            intermediaryResult = resultValue;
+            // fullEqDisplay = intermediaryResult;
             afterEquals = true;
 
-            let tempFullInput = fullInput + '=';
-            fullInputScreen.textContent = tempFullInput;
+            let tempfullEqDisplay = fullEqDisplay + '=';
+            fullEqDisplayScreen.textContent = tempfullEqDisplay;
+            
         }
         else {
             switch (btn.textContent) {
@@ -70,28 +78,28 @@ operators.forEach(btn => {
                 case "\u00F7": operand = "\u00F7"; break;
                 default: break;
             }
-            if (tempInput!= ''){
+            if (currentInput!= ''){
                 // Will happen as long as there has been new digits pressed since last operator
-                fullInput += operand;
-                if (heldValue != 0){               
-                    tempValue = equals( heldValue, operatorChoice, tempInput);
-                    heldValue = tempValue;             
+                fullEqDisplay += operand;
+                if (intermediaryResult != 0){               
+                    tempValue = equals( intermediaryResult, operatorChoice, currentInput);
+                    intermediaryResult = tempValue;             
                 }
                 else {
-                    heldValue = tempInput + '';         
+                    intermediaryResult = currentInput + '';         
                 }         
             }
             else {
                 // specific case of hitting another operator after an equals to continue equation
-                fullInput += operand;
+                fullEqDisplay += operand;
             }   
-            fullInputScreen.textContent = fullInput;
+            fullEqDisplayScreen.textContent = fullEqDisplay;
             afterOperand = true;
         }
         // Adjust global variables
         operatorChoice = btn.className;
-        tempInput = '';
-        // fullInputScreen.textContent = fullInput;
+        currentInput = '';
+        // fullEqDisplayScreen.textContent = fullEqDisplay;
         
     });
 });
@@ -113,13 +121,16 @@ const decimalPoint = document.querySelector(".dot");
 // const plusMinus = document.querySelector(".negative");
 
 decimalPoint.addEventListener('click', event => {
-    tempInput += '.';
-    fullInput += '.';
+    if(decimal === false){
+        currentInput += '.';
+        fullEqDisplay += '.';
+        decimal = true;
+    }
 })
 
 // const reverseSign = ((num) => num * -1);
 // plusMinus.addEventListener('click', event => {
-//     tempInput = reverseSign(tempInput);
+//     currentInput = reverseSign(currentInput);
     
 // })
 
@@ -138,7 +149,7 @@ const equals = ((a, op, b) => {
         case 'subtract': sol = subtract(a, b); break;
         default: break;
     }
-    // Change the number of sig digits and convert to scientific notation when greater than screenLength
+    // Change the number of sig digits and convert to scientific notation when greater than maxInputLength
     sol = Math.round((sol + Number.EPSILON) * 1e10) / 1e10;
     sol = parseFloat(Math.round((sol + Number.EPSILON) * 1e10) / 1e10);
     sol = countSignificantIntegers(sol);
@@ -149,7 +160,7 @@ const equals = ((a, op, b) => {
 const countSignificantIntegers = ((num, count = 0) => {
 
     count = (num + '').replace(".", "").length;
-    if ( count > screenLength ){
+    if ( count > maxInputLength ){
         return num.toExponential(5);
     }
     else {
@@ -158,19 +169,21 @@ const countSignificantIntegers = ((num, count = 0) => {
 });
 
 const clearAll = (() => {
-    tempInput = '';
-    fullInput = '';
-    finalValue = 0;
-    heldValue = 0;
+    currentInput = '';
+    fullEqDisplay = '';
+    resultValue = 0;
+    intermediaryResult = 0;
     operatorChoice = '';
     tempValue = 0;
     afterEquals = false;
-    fullInputScreen.textContent = fullInput;
+    fullEqDisplayScreen.textContent = fullEqDisplay;
     screen.textContent = 0;
+    currentInputLength = 0;
 })
 
 const deleteInput = (() => {
-    fullInput = heldValue;
-    tempInput = 0;
+    fullEqDisplay = intermediaryResult;
+    currentInput = '';
     screen.textContent = 0;
+    currentInputLength = 0;
 })

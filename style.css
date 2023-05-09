@@ -1,18 +1,39 @@
+/* Font from https://www.dafont.com/calculator.font */
+@font-face {
+    font-family: 'Calculator';
+    src: url('transfonter/Calculator.eot');
+    src: url('transfonter/Calculator.eot?#iefix') format('embedded-opentype'),
+        url('transfonter/Calculator.woff2') format('woff2'),
+        url('transfonter/Calculator.woff') format('woff'),
+        url('transfonter/Calculator.ttf') format('truetype'),
+        url('transfonter/Calculator.svg#Calculator') format('svg');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 
 body {
     display: flex;
     height: 700px;
     width: 700px;
     padding: 50px;
+    background-color: rgb(223, 203, 147);
+    padding-left: 25%;
 }
 
 .calculator {
     display: flex;
     flex-direction: column;
-    width: 500px;
+    width: 450px;
     height: 600px;
     align-items: center;
     vertical-align: center;
+    margin-top: auto;
+    padding: 25px;
+    background-color: rgb(57, 85, 97);
+    border: 5px rgb(158, 123, 9) solid;
+    box-shadow: 5em 2em 5em rgb(116, 90, 7);
 }
 
 
@@ -20,60 +41,134 @@ body {
 .screen {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    outline: 7px solid #b9a012;
     width: 400px;
     height: 100px;
     justify-content:center;
-    padding: 10px;
+    padding: 20px 10px;
+    margin: 10px 0;
+    background-color: rgb(241, 240, 225);
+    font-family: Calculator;
+    box-shadow: 5px 5px 3em inset rgb(119, 118, 110);
 }
 
 p {
     white-space: nowrap;
-    overflow: hidden;
-    text-overflow:ellipsis;
+    /* overflow: scroll;
+    overflow-y: hidden; */
+    /* overflow: hidden; */
+    /* text-overflow:ellipsis; */
     
-}
-
-button {
-    width: 75px;
-    height: 60px;
-    text-align: center;
 }
 
 .result-Text {
     margin: 0 10px;
     font-size: 72px;
-    direction: rtl;
+    text-align: right;
+    /* direction: rtl; */
 }
 
 .full-Input-Text {
     text-overflow: clip;
     margin: 0 10px;
     font-size: 36px;
-    height: 36px;
+    height: 48px;
+    overflow: scroll;
+    overflow-y: hidden;
 }
 
 .calc-ButtonBox {
     display: flex;
     flex-direction: column;
-    border: 1px solid black;
+    /* border: 5px solid #b9a012; */
     width: 400px;
     height: 500px;
     padding: 10px;
 
 }
 
-.erasure {
-    align-self: end;
-}
-
-.numOp-Box {
-    display: flex;
-    width: 100%;
-}
+/* button styling */
 
 .digit-box {
     display: flex;
     flex-direction: column wrap;
-    space
+    
+    /* border: 5px solid #b9a012; */
+}
+
+button {
+    width: 75px;
+    height: 60px;
+    text-align: center;
+    box-shadow: 3px 3px;
+    height: 85px;
+    width: 90px;
+    font-size: 30px;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.erasure {
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
+    margin-bottom: 10px;
+}
+
+.clear, .delete {
+    height: 50px;
+    width: 45%;
+    color:rgb(61, 90, 102);
+    background-color: #d4d1c2;
+
+}
+
+.numOp-Box {
+    display: flex;
+    padding: 0px 3%;
+    
+    /* width: 100%; */
+    /* border: 5px solid #b9a012; */
+}
+
+.digit, .dot, .equals {
+    background-color: #b9a012;
+    font-weight: bold;
+    
+}
+
+.dot{
+    background-color: rgb(111, 161, 177)
+}
+
+.equals {
+    background-color: rgb(111, 161, 177)
+}
+
+.add, .subtract, .multiply, .divide {
+    outline: 1px rgb(39, 57, 65) solid;
+    background-color: rgb(212, 227, 240);
+    font-weight: bold;
+}
+
+
+
+/* scroll bar styling */
+/* width */
+::-webkit-scrollbar {
+    height: 5px;
+}
+  
+  /* Track */
+::-webkit-scrollbar-track {
+    background: rgb(241, 240, 225);
+}
+  
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: rgb(57, 85, 97);
+}
+  
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #b9a012;
 }
