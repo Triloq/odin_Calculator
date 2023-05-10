@@ -67,7 +67,7 @@ operators.forEach(btn => {
             afterEquals = true;
 
             let tempfullEqDisplay = fullEqDisplay + '=';
-            fullEqDisplayScreen.textContent = tempfullEqDisplay;
+            // fullEqDisplayScreen.textContent = tempfullEqDisplay;
             
         }
         else {
@@ -99,7 +99,7 @@ operators.forEach(btn => {
         // Adjust global variables
         operatorChoice = btn.className;
         currentInput = '';
-        // fullEqDisplayScreen.textContent = fullEqDisplay;
+        fullEqDisplayScreen.textContent = fullEqDisplay;
         
     });
 });
@@ -186,4 +186,5 @@ const deleteInput = (() => {
     currentInput = '';
     screen.textContent = 0;
     currentInputLength = 0;
+    fullEqDisplayScreen.textContent = fullEqDisplay + operand;
 })
